@@ -6,12 +6,9 @@ PACKAGE_NAME=$INPUT_PACKAGE_NAME
 COMMIT_USERNAME=$INPUT_COMMIT_USERNAME
 COMMIT_EMAIL=$INPUT_COMMIT_EMAIL
 SSH_PRIVATE_KEY=$INPUT_SSH_PRIVATE_KEY
-
-NEW_RELEASE=${GITHUB_REF##*/v}
+GITHUB_REPO=$INPUT_GITHUB_REPO
 
 export HOME=/home/builder
-
-echo "---------------- AUR Package version $PACKAGE_NAME/$NEW_RELEASE ----------------"
 
 ssh-keyscan -t ed25519 aur.archlinux.org >> $HOME/.ssh/known_hosts
 
@@ -22,17 +19,34 @@ chmod 600 $HOME/.ssh/aur*
 git config --global user.name "$COMMIT_USERNAME"
 git config --global user.email "$COMMIT_EMAIL"
 
-REPO_URL="ssh://aur@aur.archlinux.org/${PACKAGE_NAME}.git"
+AUR_REPO_URL="ssh://aur@aur.archlinux.org/${PACKAGE_NAME}.git"
 
-echo "---------------- $REPO_URL ----------------"
+echo "---------------- $AUR_REPO_URL ----------------"
 
 cd /tmp
-git clone "$REPO_URL"
+git clone "$AUR_REPO_URL"
 cd "$PACKAGE_NAME"
+
+echo "------------- DIFF VERSION ----------------"
+
+RELEASE_VER=`curl -s https://api.github.com/repos/${GITHUB_REPO}/releases | jq -r .[0].tag_name`
+NEW_PKGVER="${RELEASE_VER:1}" # remove character 'v'
+CURRENT_VER=`grep pkgver .SRCINFO | awk -F '=' '{print $2}' | tr -d "[:space:]"`
+
+# diff version
+echo "release version is "$RELEASE_VER
+echo "current version is "$CURRENT_VER
+if [[ $NEW_PKGVER = $CURRENT_VER ]]; then
+  echo "already up-to-date!";
+  echo "------------- SYNC DONE ----------------"
+  exit 0
+fi
+
 
 echo "------------- BUILDING PKG $PACKAGE_NAME ----------------"
 
-sed -i "s/pkgver=.*$/pkgver=$NEW_RELEASE/" PKGBUILD
+sed -i "s/pkgver=.*$/pkgver=${NEW_PKGVER}/" PKGBUILD
+sed -i "s/pkgrel=.*$/pkgver=1/" PKGBUILD
 sed -i "s/sha256sums=.*$/$(makepkg -g 2>/dev/null)/" PKGBUILD
 
 # Test build
@@ -49,4 +63,4 @@ git add PKGBUILD .SRCINFO
 git commit --allow-empty  -m "Update to $NEW_RELEASE"
 git push
 
-echo "------------- PUBLISH DONE ----------------"
+echo "------------- SYNC DONE ----------------"

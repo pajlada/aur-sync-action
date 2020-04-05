@@ -1,26 +1,29 @@
 # action.yml
-name: 'AUR publish docker'
-description: 'Publish an AUR package'
-author: guumaster
+name: "AUR sync docker"
+description: "Sync an AUR package with Github release"
+author: maniacata
 branding:
   color: green
-  icon: upload
+  icon: refresh-cw
 inputs:
   package_name:
-    description: 'AUR package name'
+    description: "AUR package name"
+    required: true
+  github_repo:
+    description: "GitHub repo name"
     required: true
   commit_username:
-    description: 'The username to use when creating the new commit.'
+    description: "The username to use when creating the new commit."
     required: true
   commit_email:
-    description: 'The email to use when creating the new commit.'
+    description: "The email to use when creating the new commit."
     required: true
   ssh_private_key:
-    description: 'Your private key with access to AUR package.'
+    description: "Your private key with access to AUR package."
     required: true
 
 runs:
-  using: 'docker'
-  image: 'Dockerfile'
+  using: "docker"
+  image: "Dockerfile"
   args:
-    - ${{ inputs.package_name }} ${{ inputs.commit_username }} ${{ inputs.commit_email }} ${{ inputs.ssh_private_key }}
+    - ${{ inputs.package_name }} ${{ inputs.github_repo }} ${{ inputs.commit_username }} ${{ inputs.commit_email }} ${{ inputs.ssh_private_key }}

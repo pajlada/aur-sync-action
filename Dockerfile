@@ -2,9 +2,9 @@ FROM archlinux/base
 
 RUN pacman -Sy && \
     pacman -Sy --noconfirm openssh \
-      git fakeroot binutils go-pie gcc awk binutils xz \
-      libarchive bzip2 coreutils file findutils \
-      gettext grep gzip sed ncurses
+    git fakeroot binutils go-pie gcc awk binutils xz \
+    libarchive bzip2 coreutils file findutils \
+    gettext grep gzip sed ncurses jq
 
 RUN useradd -ms /bin/bash builder && \
     mkdir -p /home/builder/.ssh && \
