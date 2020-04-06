@@ -46,7 +46,7 @@ fi
 echo "------------- BUILDING PKG $PACKAGE_NAME ----------------"
 
 sed -i "s/pkgver=.*$/pkgver=${NEW_PKGVER}/" PKGBUILD
-sed -i "s/pkgrel=.*$/pkgver=1/" PKGBUILD
+sed -i "s/pkgrel=.*$/pkgrel=1/" PKGBUILD
 sed -i "s/sha256sums=.*$/$(makepkg -g 2>/dev/null)/" PKGBUILD
 
 # Test build
