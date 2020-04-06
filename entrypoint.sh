@@ -34,7 +34,7 @@ NEW_PKGVER="${RELEASE_VER:1}" # remove character 'v'
 CURRENT_VER=`grep pkgver .SRCINFO | awk -F '=' '{print $2}' | tr -d "[:space:]"`
 
 # diff version
-echo "release version is "$RELEASE_VER
+echo "release version is "$NEW_PKGVER
 echo "current version is "$CURRENT_VER
 if [[ $NEW_PKGVER = $CURRENT_VER ]]; then
   echo "already up-to-date!";
