@@ -26,6 +26,8 @@ so this action can commit and push to it.
 ### `ssh_private_key`
 **Required** Your private key with access to AUR package.
 
+### `extra_dependencies`
+**Required** A string contains extra dependencies when building AUR package, separated by space.
 
 ## Example usage
 ```
@@ -40,11 +42,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Sync AUR package with Github release
-        uses: maniaciachao/aur-sync-action@v1
+        uses: maniaciachao/aur-sync-action@v1.2
         with:
-          package_name: clashr-bin
-          github_repo: 'frainzy1477/clashrdev'
+          package_name: logism-evolution
+          github_repo: 'reds-heig/logisim-evolution'
           commit_username: 'Github Action Bot'
           commit_email: github-action-bot@example.com
           ssh_private_key: ${{ secrets.AUR_SSH_PRIVATE_KEY }}
+          extra_dependencies: 'jre-openjdk'
 ```

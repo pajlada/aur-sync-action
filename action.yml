@@ -21,9 +21,17 @@ inputs:
   ssh_private_key:
     description: "Your private key with access to AUR package."
     required: true
+  extra_dependencies:
+    description: "Extra dependencies when building AUR package."
+    required: false
 
 runs:
   using: "docker"
   image: "Dockerfile"
   args:
-    - ${{ inputs.package_name }} ${{ inputs.github_repo }} ${{ inputs.commit_username }} ${{ inputs.commit_email }} ${{ inputs.ssh_private_key }}
+    - ${{ inputs.package_name }}
+    - ${{ inputs.github_repo }}
+    - ${{ inputs.commit_username }}
+    - ${{ inputs.commit_email }}
+    - ${{ inputs.ssh_private_key }}
+    - ${{ inputs.extra_dependencies }}

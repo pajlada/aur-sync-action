@@ -4,7 +4,8 @@ RUN pacman -Sy && \
     pacman -Sy --noconfirm openssh \
     git fakeroot binutils go-pie   \
     gcc awk binutils coreutils  \
-    file gettext grep jq perl
+    file gettext grep jq perl \
+    $INPUT_EXTRA_DEPENDENCIES
 
 RUN useradd -ms /bin/bash builder && \
     mkdir -p /home/builder/.ssh && \
