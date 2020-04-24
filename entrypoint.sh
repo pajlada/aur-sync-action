@@ -44,7 +44,7 @@ echo "------------- BUILDING PKG $PACKAGE_NAME ----------------"
 
 if [[ ! -z "$INPUT_EXTRA_DEPENDENCIES" ]]; then
   echo "------------- EXTRA DENPENDENCIES ----------------"
-  pacman pacman -Sy --noconfirm $EXTRA_DEPENDENCIES
+  pacman pacman -Sy --noconfirm $INPUT_EXTRA_DEPENDENCIES
 fi
 
 echo "------------- MAKE PACKAGE ----------------"
