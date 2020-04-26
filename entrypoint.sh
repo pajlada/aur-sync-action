@@ -8,7 +8,7 @@ COMMIT_EMAIL=$INPUT_COMMIT_EMAIL
 SSH_PRIVATE_KEY=$INPUT_SSH_PRIVATE_KEY
 GITHUB_REPO=$INPUT_GITHUB_REPO
 
-HOME=/root
+HOME=/home/builder
 
 # config ssh 
 ssh-keyscan -t ed25519 aur.archlinux.org >> $HOME/.ssh/known_hosts
