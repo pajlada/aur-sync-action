@@ -44,7 +44,7 @@ echo "------------- BUILDING PKG $PACKAGE_NAME ----------------"
 
 if [[ ! -z "$INPUT_EXTRA_DEPENDENCIES" ]]; then
   echo "------------- EXTRA DENPENDENCIES ----------------"
-  pacman pacman -Sy --noconfirm $INPUT_EXTRA_DEPENDENCIES
+  sudo pacman -Sy --noconfirm $INPUT_EXTRA_DEPENDENCIES
 fi
 
 echo "------------- MAKE PACKAGE ----------------"
@@ -60,7 +60,7 @@ echo "------------- BUILD DONE ----------------"
 
 # update aur
 git add PKGBUILD .SRCINFO
-git commit --allow-empty  -m "Update to $NEW_RELEASE"
+git commit --allow-empty  -m "Update to $NEW_PKGVER"
 git push
 
 echo "------------- SYNC DONE ----------------"
