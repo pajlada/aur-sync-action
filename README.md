@@ -27,7 +27,7 @@ so this action can commit and push to it.
 **Required** Your private key with access to AUR package.
 
 ### `extra_dependencies`
-**Required** A string contains extra dependencies when building AUR package, separated by space.
+A string that contains extra dependencies when building the AUR package, separated by space.
 
 ## Example usage
 ```
