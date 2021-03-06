@@ -27,18 +27,9 @@ cd "$PACKAGE_NAME"
 
 echo "------------- DIFF VERSION ----------------"
 
-RELEASE_VER=`curl -s https://api.github.com/repos/${GITHUB_REPO}/releases | jq -r .[0].tag_name`
-NEW_PKGVER="${RELEASE_VER:1}" # remove character 'v'
 CURRENT_VER=`grep pkgver .SRCINFO | awk -F '=' '{print $2}' | tr -d "[:space:]"`
 
-echo "release version is "$NEW_PKGVER
-echo "current version is "$CURRENT_VER
-
-if [[ $NEW_PKGVER = $CURRENT_VER ]]; then
-  echo "already up-to-date!";
-  echo "------------- SYNC DONE ----------------"
-  exit 0
-fi
+echo "old version is $NEW_PKGVER"
 
 echo "------------- BUILDING PKG $PACKAGE_NAME ----------------"
 
@@ -48,19 +39,21 @@ if [[ ! -z "$INPUT_EXTRA_DEPENDENCIES" ]]; then
 fi
 
 echo "------------- MAKE PACKAGE ----------------"
-sed -i "s/pkgver=.*$/pkgver=${NEW_PKGVER}/" PKGBUILD
-sed -i "s/pkgrel=.*$/pkgrel=1/" PKGBUILD
-perl -i -0pe "s/sha256sums=[\s\S][^\)]*\)/$(makepkg -g 2>/dev/null)/" PKGBUILD
 # test build
-makepkg -c
+makepkg -s
 # update srcinfo
 makepkg --printsrcinfo > .SRCINFO
 
 echo "------------- BUILD DONE ----------------"
 
 # update aur
-git add PKGBUILD .SRCINFO
-git commit --allow-empty  -m "Update to $NEW_PKGVER"
-git push
+if ! git diff --check; then
+    NEW_PKGVER=`grep pkgver .SRCINFO | awk -F '=' '{print $2}' | tr -d "[:space:]"`
+    echo "new version is $NEW_PKGVER"
+    # Changes have been made, add and push
+    git add PKGBUILD .SRCINFO
+    git commit -m "Update to $NEW_PKGVER"
+    git push
+fi
 
 echo "------------- SYNC DONE ----------------"
