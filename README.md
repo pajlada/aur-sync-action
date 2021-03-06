@@ -14,9 +14,6 @@ so this action can commit and push to it.
 ### `package_name`
 **Required** The AUR package name you want to update.
 
-### `github_repo`
-**Required** The GitHub repo you want to sync with.
-
 ### `commit_username`
 **Required** The username to use when creating the new commit.
 
@@ -28,6 +25,9 @@ so this action can commit and push to it.
 
 ### `extra_dependencies`
 A string that contains extra dependencies when building the AUR package, separated by space.
+
+### `dry-run`
+A boolean value deciding whether to skip the final push or not
 
 ## Example usage
 ```
@@ -45,9 +45,9 @@ jobs:
         uses: maniaciachao/aur-sync-action@v1.2
         with:
           package_name: logism-evolution
-          github_repo: 'reds-heig/logisim-evolution'
           commit_username: 'Github Action Bot'
           commit_email: github-action-bot@example.com
           ssh_private_key: ${{ secrets.AUR_SSH_PRIVATE_KEY }}
           extra_dependencies: 'jre-openjdk'
+          dry_run: true
 ```

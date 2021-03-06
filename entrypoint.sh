@@ -6,7 +6,7 @@ PACKAGE_NAME=$INPUT_PACKAGE_NAME
 COMMIT_USERNAME=$INPUT_COMMIT_USERNAME
 COMMIT_EMAIL=$INPUT_COMMIT_EMAIL
 SSH_PRIVATE_KEY=$INPUT_SSH_PRIVATE_KEY
-GITHUB_REPO=$INPUT_GITHUB_REPO
+DRY_RUN=$INPUT_DRY_RUN
 
 HOME=/home/builder
 
@@ -27,15 +27,15 @@ cd "$PACKAGE_NAME"
 
 echo "------------- DIFF VERSION ----------------"
 
-CURRENT_VER=`grep pkgver .SRCINFO | awk -F '=' '{print $2}' | tr -d "[:space:]"`
+CURRENT_VER=$(grep pkgver .SRCINFO | awk -F '=' '{print $2}' | tr -d "[:space:]")
 
-echo "old version is $NEW_PKGVER"
+echo "old version is $CURRENT_VER"
 
 echo "------------- BUILDING PKG $PACKAGE_NAME ----------------"
 
-if [[ ! -z "$INPUT_EXTRA_DEPENDENCIES" ]]; then
+if [ -n "$INPUT_EXTRA_DEPENDENCIES" ]; then
   echo "------------- EXTRA DENPENDENCIES ----------------"
-  sudo pacman -Sy --noconfirm $INPUT_EXTRA_DEPENDENCIES
+  sudo pacman -Sy --noconfirm "$INPUT_EXTRA_DEPENDENCIES"
 fi
 
 echo "------------- MAKE PACKAGE ----------------"
@@ -48,12 +48,18 @@ echo "------------- BUILD DONE ----------------"
 
 # update aur
 if ! git diff --check; then
-    NEW_PKGVER=`grep pkgver .SRCINFO | awk -F '=' '{print $2}' | tr -d "[:space:]"`
+    NEW_PKGVER=$(grep pkgver .SRCINFO | awk -F '=' '{print $2}' | tr -d "[:space:]")
     echo "new version is $NEW_PKGVER"
     # Changes have been made, add and push
     git add PKGBUILD .SRCINFO
     git commit -m "Update to $NEW_PKGVER"
-    git push
+    if [ "$DRY_RUN" = "true" ]; then
+        echo "dry run"
+        git --no-pager log -p
+    else
+        echo "pushing"
+        git push
+    fi
 fi
 
 echo "------------- SYNC DONE ----------------"
