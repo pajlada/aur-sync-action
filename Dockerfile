@@ -1,6 +1,7 @@
-FROM archlinux/base
+FROM archlinux/base-devel
 
 RUN pacman -Sy && \
+    pacman -Syu && \
     pacman -Sy --noconfirm openssh sudo \
     git fakeroot binutils go-pie gcc awk binutils xz \
     libarchive bzip2 coreutils file findutils \
