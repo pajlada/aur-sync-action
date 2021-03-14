@@ -62,6 +62,8 @@ if ! git diff --check; then
         echo "pushing"
         git push
     fi
+else
+    echo "Nothing changed, looks like we're up to date!"
 fi
 
 echo "------------- SYNC DONE ----------------"
