@@ -61,7 +61,7 @@ if ! git diff --exit-code; then
     git commit -m "Update to $NEW_PKGVER"
     if [ "$DRY_RUN" = "true" ]; then
         echo "dry run"
-        git --no-pager log -p
+        git --no-pager log -p origin..HEAD
     else
         echo "pushing"
         git push
