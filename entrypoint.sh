@@ -52,7 +52,7 @@ echo "------------- BUILD DONE ----------------"
 echo "Running git diff"
 git diff
 echo "running git diff in the if"
-if ! git diff --check; then
+if ! git diff --exit-code; then
     echo "there was a diff!!!!"
     NEW_PKGVER=$(grep pkgver .SRCINFO | awk -F '=' '{print $2}' | tr -d "[:space:]")
     echo "new version is $NEW_PKGVER"
