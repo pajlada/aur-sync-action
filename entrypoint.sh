@@ -8,6 +8,8 @@ COMMIT_EMAIL=$INPUT_COMMIT_EMAIL
 SSH_PRIVATE_KEY=$INPUT_SSH_PRIVATE_KEY
 DRY_RUN=$INPUT_DRY_RUN
 
+echo "Dry run: '$DRY_RUN'"
+
 HOME=/home/builder
 
 # config ssh 
