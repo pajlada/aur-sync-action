@@ -8,8 +8,6 @@ COMMIT_EMAIL=$INPUT_COMMIT_EMAIL
 SSH_PRIVATE_KEY=$INPUT_SSH_PRIVATE_KEY
 DRY_RUN=$INPUT_DRY_RUN
 
-echo "Dry run: '$DRY_RUN'"
-
 HOME=/home/builder
 
 # config ssh 
@@ -21,6 +19,13 @@ chmod 600 $HOME/.ssh/aur*
 git config --global user.name "$COMMIT_USERNAME"
 git config --global user.email "$COMMIT_EMAIL"
 AUR_REPO_URL="ssh://aur@aur.archlinux.org/${PACKAGE_NAME}.git"
+if [ -z "$SSH_PRIVATE_KEY" ]; then
+    >&2 echo "No SSH private key specified, pushing won't be possible. Using https repo instead. Force enabling DRY_RUN"
+    DRY_RUN="true"
+    AUR_REPO_URL="https://aur.archlinux.org/${PACKAGE_NAME}.git"
+fi
+
+echo "Dry run: '$DRY_RUN'"
 
 echo "---------------- CLONE REPO ----------------"
 cd /tmp
