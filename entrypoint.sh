@@ -40,7 +40,7 @@ fi
 
 echo "------------- MAKE PACKAGE ----------------"
 # test build
-makepkg -s
+makepkg -s --noconfirm
 # update srcinfo
 makepkg --printsrcinfo > .SRCINFO
 
